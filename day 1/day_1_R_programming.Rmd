@@ -1,0 +1,2775 @@
+---
+title: 'Programming in R for Data Science'
+subtitle: 'learning by doing'
+author: "Katrien Antonio"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: xaringan-themer.css
+    nature:
+      countIncrementalSlides: no
+      highlightLines: yes
+      highlightStyle: github
+institute: KU Leuven and UvA
+---
+
+```{r xaringan-themer, include = FALSE}
+library(xaringanthemer)
+mono_accent(base_color = "#43418A")
+```
+
+class: center, middle
+
+# Who's who?
+
+---
+
+# About the teacher
+
+A collection of links: 
+
+- [my personal website](https://katrienantonio.github.io)
+
+- [my GitHub page](https://github.com/katrienantonio) 
+
+- an [e-book](https://katrienantonio.github.io/intro-R-book/) with more documentation.
+
+Research team is [here](https://katrienantonio.github.io/lab/lab-members/). 
+
+---
+
+# Practical information
+
+Course material including
+
+- R scripts, data, lecture sheets 
+
+- a collection of **cheat sheets** 
+
+are available from
+
+<br>
+
+<center>
+<font size="5">
+<a href="https://github.com/katrienantonio/PE-Programming-R-for-data-science"target="_blank">https://github.com/katrienantonio/PE-Programming-R-for-data-science</a>
+</font>
+</center>
+
+<br>
+
+
+
+---
+
+class: center, middle
+
+# Today's agenda
+
+---
+
+# Learning outcomes
+
+Today you will work on:
+
+- R architecture 
+
+- R universe
+
+- basic object types and syntax
+
+- import/export data 
+
+- plots, plots, plots
+
+- data structures and data wrangling
+
+- writing functions 
+
+- linear models
+
+You will cover examples of code<sup>1</sup> and work on **R challenges**.
+
+.footnote[
+[1] For a detailed discussion of each topic, see [e-book](https://katrienantonio.github.io/intro-R-book).
+]
+
+---
+
+class: inverse, center, middle
+
+# Get started - explore the R architecture
+
+---
+
+# What is R?
+
+> <font size="+2"> <p align="justify">The R environment is an integrated suite of software facilities for data manipulation, calculation and graphical display.</p></font>
+
+</br>
+
+A brief history:
+
+- R is a dialect of the S language
+
+- R was written by **R**obert Gentleman and **R**oss Ihaka in 1992
+
+- the R source code was first released in 1995
+
+- in 1998, the Comprehensive R Archive Network [CRAN](http://CRAN.R-project.org/) was established
+
+- the first official release, R version 1.0.0, dates to 2000-02-29. Currently R 3.6.0 (May, 2019)
+
+- R is open source via the [GNU General Public License](https://en.wikipedia.org/wiki/GNU_General_Public_License).
+
+
+---
+
+# Explore the R architecture
+
+- R is like a car's engine
+
+- RStudio is like a car's dashboard, an integrated development environment (IDE) for R.
+
+
+R: Engine            |  RStudio: Dashboard
+:-------------------------:|:-------------------------:
+<img src="images/basic/engine.jpg" alt="Drawing" style="height: 300px;"/>  |  <img src="images/basic/dashboard.jpg" alt="Drawing" style="height: 300px;"/>
+
+---
+
+# How do I code in R?
+
+Keep in mind:
+
+- unlike other software like Excel, STATA, or SAS, R is an interpreted language
+
+- no point and click in R!
+
+- **you have to program in R**!
+
+R **packages** extend the functionality of R by providing additional functions, and can be downloaded for free from the internet.
+
+R: A new phone           |  R Packages: Apps you can download
+:-------------------------:|:-------------------------:
+<img src="images/basic/iphone.jpg" alt="Drawing" style="height: 150px;"/>  |  <img src="images/basic/apps.jpg" alt="Drawing" style="height: 150px;"/>
+
+---
+
+# Install and load an R package
+
+The `ggplot2` package is a very popular package for data visualisation.
+
+--
+
+Install the package
+
+```{r install_ggplot, eval=FALSE, tidy=FALSE}
+install.packages("ggplot2")
+```
+--
+Load the installed package
+
+```{r load_ggplot, eval=FALSE, tidy=FALSE}
+library(ggplot2)
+```
+--
+And give it a try
+
+```{r try_ggplot, eval=FALSE, tidy=FALSE}
+head(diamonds)
+qplot(clarity, data = diamonds, fill = cut, geom = "bar") 
+```
+--
+Packages are developed and maintained by R users worldwide, and shared with the R community through CRAN: now 14,400 packages online!
+
+---
+
+class: inverse, center, middle
+
+# What's out there - the R universe
+
+---
+
+class: center, middle
+
+<center>
+<img src="images/basic/tidyverse2.1.png" width="1000"/>
+</center>
+
+---
+
+# The workflow of a data scientist
+
+><p align="justify">The <b>tidyverse</b> is an opinionated collection of R packages designed for data science. All packages share an underlying design philosophy, grammar, and data structures. </p>
+
+<center>
+<img src="images/basic/tidy_workflow.png" width="500"/>
+</center>
+
+More on: [tidyverse](www.tidyverse.org).
+
+---
+
+class: inverse, center, middle
+
+# Programming style
+
+---
+
+# R style guide
+
+Deciding on a **programming style** provides consistency to your code and assists in reading and writing code. 
+
+The choice of style guide is unimportant, but it is important to choose a style! 
+
+This workshop follows a set of rules roughly based on the [tidyverse style guide](https://style.tidyverse.org/).
+
+---
+
+# R style guide
+
+**Variable names** contain only **lower case** letters. If the name consists of multiple words, then these words are separated by **underscores**. 
+
+```{r tidy=FALSE, eval=FALSE}
+number_of_simulations <- 100
+```
+
+--
+
+**User defined functions** follow the same convention as variable names, but start with a **capital** letter.
+```{r tidy=FALSE, eval=FALSE}
+Multiply_by_2 <- function(x) {
+  return(x * 2)
+} 
+```
+
+--
+
+Functions from external packages usually start with a lowercase letter.
+```{r tidy=FALSE, eval=FALSE}
+zero_list <- rep(0, 100)
+```
+
+---
+
+class: inverse, center, middle
+
+# Little arithmetics with R
+
+---
+
+# Your first R steps
+
+Do little arithmetics with R:
+
+- write R code in the console
+
+- every line of code is interpreted and executed by R 
+
+- you get a message whether or not your code was correct
+
+- the output of your R code is then shown in the console
+
+- use # sign to add comments, like Twitter!
+
+--
+
+Now run in the console
+
+```{r little_arithm, comment = '', eval=TRUE, tidy=FALSE}
+10^2 + 36
+```
+You asked and R answered!
+
+---
+
+class: inverse, center, middle
+
+# Objects and data types in R
+
+---
+
+# Variables
+
+A basic concept in (statistical) programming is a **variable**. 
+
+- a variable allows you to store a value (e.g. 4) or an object (e.g. a function description) in R
+
+- use this variable’s name to easily access the value or the object that is stored within this variable.
+
+Assign value `4` to variable `a`
+```{r work_with_variables }
+a <- 4
+```
+and verify the variable stored
+```{r comment = ''}
+a
+```
+---
+
+# R challenge
+
+Verify the following instructions
+
+```{r little_arithm_challenge, eval=FALSE}
+a*5
+(a+10)/2
+a <- a+1
+```
+
+---
+
+# Data types
+
+R works with numerous **data types**: e.g.
+
+- decimal values like 4.5 are called **numerics**
+
+- natural numbers like 4 are called **integers**
+
+- Boolean values (`TRUE` or `FALSE`) are called **logical**
+
+- `Date` or POSIXct for time based variables<sup>[1]</sup>; `Date` stores just a date and `POSIXct` stores a date and time 
+
+- text (or string) values are called **characters**.
+
+.footnote[
+[1] Both objects are actually represented as the number of days (`Date`) or seconds (`POSIXct`) since January 1, 1970.
+]
+
+
+---
+
+# R challenge
+
+Run the following instructions and pay attention to the code:
+
+```{r}
+my_numeric <- 42.5
+
+my_character <- "some text"
+
+my_logical <- TRUE
+
+my_date <- as.Date("06/17/2019", "%m/%d/%Y")
+```
+
+Verify the data type of a variable with the `class()` function: e.g.
+
+```{r comment = ''}
+class(my_numeric)
+class(my_date)
+```
+
+---
+
+# Everything is an object
+
+><p align="justify"> The fundamental design principle underlying R is “everything is an object”. </p> 
+
+<br>
+
+Keep in mind:
+
+- in R, an analysis is broken down into a series of steps
+
+- intermediate results are stored in objects, with minimal output at each step (often none) 
+
+- manipulate the objects to obtain the information required
+
+- a variable in R can take on any available data type, or hold any R object.
+
+---
+
+# R challenge
+
+Run
+```{r eval=FALSE}
+ls()
+```
+to list all objects stored in R's memory.
+
+Use `rm()` to remove an object from R's memory, e.g.
+
+```{r eval=FALSE}
+rm(a)                                     # remove a single object
+rm(my_character, my_logical)              # remove multiple objects
+rm(list = c('my_date', 'my_numeric'))     # remove a list of objects
+rm(list = ls())                           # remove all objects
+```
+
+---
+
+class: inverse, center, middle
+
+# Basic data structures in R
+
+---
+
+# Vectors
+
+A **vector** is a simple tool to store data:
+
+- one-dimension arrays that can hold numeric data, character data, or logical data
+
+- you create a vector with the combine function `c()`
+
+- operations are applied to each element of the vector automatically, there is no need to loop through the vector.
+
+Here are some first examples:
+
+```{r vectors_in_R, eval=FALSE}
+my_vector <- c(0, 3:5, 20, 0)                      
+my_vector[2]       # inspect entry 2 from vector my_vector
+my_vector[2:3]     # inspect entries 2 and 3
+length(my_vector)  # get vector length
+my_family <- c("Katrien", "Jan", "Leen")
+my_family
+```
+
+---
+
+# R challenge
+
+You can give a name to the elements of a vector with the `names()` function:
+
+```{r vector_challenge, comment = ''}
+my_vector <- c("Katrien Antonio", "teacher")
+names(my_vector) <- c("Name", "Profession")
+my_vector
+```
+
+Now it's your turn!
+
+Inspect `my_vector` using: 
+
+- the `attributes()` function
+
+- the `length()` function
+
+- the `str()` function
+
+---
+
+# R challenge solved
+
+```{r vector_challenge_solved, comment = ''}
+my_vector <- c("Katrien Antonio", "teacher")
+names(my_vector) <- c("Name", "Profession")
+my_vector
+
+attributes(my_vector)
+length(my_vector)
+names(my_vector)
+```
+
+---
+
+# Matrices
+
+A **matrix** is:
+
+- a collection of elements of the same data type (numeric, character, or logical) 
+
+- fixed number of rows and columns.
+
+A first example
+
+```{r matrices_in_R, comment = ''}
+my_matrix <- matrix(1:12, 3, 4, byrow = TRUE)
+my_matrix
+my_matrix[1, 1]
+```
+
+---
+
+# Data frames and tibbles
+
+A **data frame**:
+
+- is pretty much the *de facto* data structure for most tabular data 
+
+- what we use for statistics
+
+- variables of a data set as columns and the observations as rows.
+
+--
+
+A **tibble**:
+
+- a.k.a `tbl` 
+
+- a type of data frame common in the `tidyverse`
+
+- slightly different default behaviour than data frames.
+
+</br> 
+
+Let's explore some differences between both structures!
+
+---
+
+# R challenge
+
+Inspect a built-in data frame
+
+```{r comment = '', eval = FALSE}
+mtcars
+str(mtcars)
+head(mtcars)
+```
+
+Extract a variable from a data frame and ask a `summary`
+
+```{r comment = '', eval = FALSE}
+summary(mtcars$cyl)   # use $ to extract variable from a data frame
+```
+
+Now inspect a tibble
+
+```{r comment = '', eval = FALSE}
+diamonds
+str(diamonds)  # built-in in library ggplot2
+head(diamonds)
+```
+
+Can you list some differences?
+
+---
+
+# Lists
+
+A **list** allows you to 
+
+- gather a variety of objects under one name in an ordered way
+
+- these objects can be matrices, vectors, data frames, even other lists
+
+- a list is some kind super data type
+
+- you can store practically any piece of information in it!
+
+---
+
+# Lists
+
+A first example of a list:
+
+```{r comment = ''}
+my_list <- list(one = 1, two = c(1, 2), five = seq(1, 4, length=5),
+          six = c("Katrien", "Jan"))
+names(my_list)
+str(my_list)
+```
+
+---
+
+# R challenge
+
+1. Create a vector `fav_music` with your favourite artists.
+
+2. Create a vector `num_records` with the number of records you have in your collection of each of those artists.
+
+3. Create a vector `num_concerts` with the number of times you attended a concert of these artists.
+
+4. Put everything together in a data frame, assign the name `my_music` to this data frame and change the labels of the information stored in the columns to `artist`, `records` and `concerts`.
+
+5. Extract the variable `num_records` from the data frame `my_music`. 
+
+6. Calculate the total number of records in your collection (for the defined set of artists).
+
+7. Check the structure of the data frame, ask for a `summary`.
+
+---
+
+# R challenge solved
+
+Here is my solution
+
+```{r}
+fav_music <- c("Prince", "REM", "Ryan Adams", "BLOF")
+num_concerts <- c(0, 3, 1, 0)
+num_records <- c(2, 7, 5, 1)
+my_music <- data.frame(fav_music, num_concerts, num_records)
+names(my_music) <- c("artist", "concerts", "records")
+```
+
+---
+
+# R challenge solved
+
+```{r}
+summary(my_music)
+my_music$records
+sum(my_music$records)
+```
+
+---
+
+class: inverse, center, middle
+
+# Getting started with data in R
+
+---
+
+# Importing data in R
+
+Some useful instructions regarding path names:
+
+- get your working directory
+
+```{r eval=FALSE}
+getwd()
+```
+
+- specify a path name, with forward slash or double back slash
+
+```{r eval=FALSE}
+path <- file.path("C:/Users/u0043788/Dropbox/PE Programming in R for Data Science")
+setwd(path)
+```
+
+- use a relative path
+
+```{r eval=FALSE}
+path_pools <- file.path("./data/swimming_pools.csv")
+```
+
+or 
+
+```{r eval=FALSE}
+path_pools <- file.path("../data/swimming_pools.csv")
+```
+
+---
+
+# Importing data in R
+
+Some useful instructions regarding path names:
+
+- extract the directory of the current active file in RStudio via the package `rstudioapi` 
+
+```{r, eval = FALSE}
+path <- dirname(rstudioapi::getActiveDocumentContext()$path)
+setwd(path)
+```
+
+and then you'll work with
+
+```{r eval=FALSE}
+path_pools <- file.path("../data/swimming_pools.csv")
+```
+
+
+---
+
+# Import a .txt file
+
+`read.table()` is the most basic importing function.
+
+You can specify tons of different arguments in this function. 
+
+```{r eval=FALSE}
+path_hotdogs <- file.path("../data/hotdogs.txt")
+path_hotdogs    # inspect path name
+hotdogs <- read.table(path_hotdogs, header = FALSE, 
+                      col.names = c("type", "calories", "sodium"))
+str(hotdogs)    # inspect data imported
+```
+
+or like this
+
+```{r eval=FALSE}
+hotdogs_2 <- read.table(path_hotdogs, header = FALSE, 
+                       col.names = c("type", "calories", "sodium"),
+                       colClasses = c("factor", "NULL", "numeric"))
+str(hotdogs_2)
+```
+
+What happened?
+
+---
+
+# Import a .csv file
+
+`read.csv()` is the basic importing function.
+
+Here is an example:
+
+- load a data set on swimming pools in Brisbane 
+
+- column names in the first row; a comma to separate values within rows
+
+```{r eval=FALSE}
+path_pools <- file.path("../data/swimming_pools.csv")
+pools <- read.csv(path_pools)
+str(pools)
+```
+
+But, what happens?
+
+--
+
+With `stringsAsFactors` you can tell R whether it should convert strings in the flat file to factors.
+
+```{r eval=FALSE}
+pools <- read.csv(path_pools, stringsAsFactors = FALSE)
+str(pools)
+```
+
+---
+
+# Useful packages for data import
+
+
+.pull-left[
+<center>
+<img src="images/basic/readxl.png" width="200">
+</center>
+]
+
+.pull-right[
+<center>
+<img src="images/basic/haven.png" width="200">
+</center>
+]
+
+<center>
+<img src="images/basic/readr.png" width="200">
+</center>
+
+---
+
+# The readr package
+
+The goal of `readr` is:
+
+* to provide a fast and friendly way to read rectangular data (like csv, tsv, and fwf).
+
+To read a rectangular dataset with `readr` you combine two pieces: 
+
+* a function that parses the overall file
+
+* a column specification. 
+
+The column specification describes how each column should be converted from a character vector to the most appropriate data type, and in most cases it’s not necessary because readr will guess it for you automatically.
+
+---
+
+# The readr package
+
+`readr` supports seven file formats with seven `read_` functions:
+
+* `read_csv()`: comma separated (CSV) files
+
+* `read_tsv()`: tab separated files
+
+* `read_delim()`: general delimited files
+
+* `read_fwf()`: fixed width files
+
+* `read_table()`: tabular files where columns are separated by white-space
+
+* `read_log()`: web log files.
+
+More details on [https://readr.tidyverse.org/](https://readr.tidyverse.org/).
+
+---
+
+# Import a .xlsx file
+
+The `readxl` package makes it easy to get Excel data into R:
+
+- no external dependencies, so it’s easy to install and use 
+
+- designed to work with tabular data.
+
+```{r eval=FALSE} 
+library(readxl) 
+path_urbanpop <- file.path("../data/urbanpop.xlsx")
+excel_sheets(path_urbanpop) # list sheet names with `excel_sheets()`
+```
+
+Specify a worksheet by name or number, e.g.
+```{r eval=FALSE} 
+pop_1 <- read_excel(path_urbanpop, sheet = 1) 
+pop_2 <- read_excel(path_urbanpop, sheet = 2) 
+```
+
+inspect and re-combine
+```{r eval=FALSE} 
+str(pop_1) 
+pop_list <- list(pop_1, pop_2) 
+```
+
+---
+
+# Import other data formats
+
+The `haven` package enables R to read and write various data formats used by other statistical packages.
+
+It supports:
+
+- **SAS**: `read_sas()` reads .sas7bdat and .sas7bcat files and `read_xpt()` reads SAS transport files (version 5 and version 8).
+`write_sas()` writes .sas7bdat files.
+
+- **SPSS**: `read_sav()` reads .sav files and `read_por()` reads the older .por files. `write_sav()` writes .sav files.
+
+- **Stata**: `read_dta()` reads .dta files (up to version 15). 
+`write_dta()` writes .dta files (versions 8-15).
+
+---
+
+# R challenge
+
+Load the following data sets, available in the course material:
+
+- the Danish fire insurance losses, stored in `danish.txt`
+
+- the severity data set, stored in `severity.sas7bdat`
+
+- the policy data set, stored in `PolicyData.csv`, wih variables separated by a `semicolon`. 
+
+---
+
+# R challenge solved
+
+Import the Danish fire insurance losses
+
+```{r}
+path <- file.path('../data')
+path.danish <- file.path(path, "danish.txt")
+danish <- read.table(path.danish, header = TRUE)
+danish$Date <- as.Date(danish$Date, "%m/%d/%Y")
+str(danish)
+```
+
+Import the severity data set
+
+```{r eval=FALSE}
+library(haven)
+severity <- read_sas('../data/severity.sas7bdat')
+str(severity)
+```
+
+---
+
+# R challenge solved
+
+Import the policy data set
+
+```{r eval=TRUE}
+policy_data <- read.csv(file = '../data/PolicyData.csv', sep = ';') 
+str(policy_data)
+```
+
+
+
+---
+
+class: inverse, center, middle
+
+# Exploratory data analysis
+
+---
+
+# A numeric variable
+
+You first explore a **numeric** variable:
+
+load the `CPS1985` data set and inspect the `wage` variable
+
+```{r echo=FALSE, include=FALSE}
+cps_1985 <- read.table("../data/CPS1985.txt", header = TRUE)
+```
+
+```{r}
+summary(cps_1985$wage)         # get a summary
+is.numeric(cps_1985$wage)      # check if variable is numeric
+mean(cps_1985$wage)            # get mean
+var(cps_1985$wage)             # get variance
+```
+
+---
+
+# A numeric variable
+
+You first explore a **numeric** variable:
+
+visualize the `wage` distribution
+
+```{r out.width='45%', fig.align="center"}
+hist(log(cps_1985$wage), freq = FALSE, nclass = 20, col = "light blue")
+lines(density(log(cps_1985$wage)), col = "red")
+```
+
+---
+
+# A factor variable
+
+You now explore the `occupation` variable
+
+```{r comment = ''}
+summary(cps_1985$occupation)
+```
+
+change the names of some of the levels
+
+```{r comment = ''}
+levels(cps_1985$occupation)[c(1, 5)] <- c("mgmt", "techn")
+summary(cps_1985$occupation)
+```
+
+---
+
+# A factor variable
+
+You now explore the `occupation` variable:
+
+- visualize the distribution
+
+```{r out.width='45%', fig.align="center"}
+tab <- table(cps_1985$occupation)
+prop.table(tab)
+```
+
+---
+
+# A factor variable
+
+You now explore the `occupation` variable:
+
+- visualize the distribution
+
+```{r out.width='45%', fig.align="center"}
+barplot(tab)
+```
+
+---
+
+# Two factor variables
+
+You now explore the factor variables `gender` and `occupation`.
+
+Use `prop.table()`
+
+```{r comment = ''}
+attach(cps_1985)                 # attach the data set to avoid use of $ 
+table(gender, occupation)        # no name_df$name_var necessary
+prop.table(table(gender, occupation))
+detach(cps_1985)                 # now detach when work is done
+```
+
+---
+
+# Two factor variables
+
+Now try `prop.table(table(gender, occupation), 2)`.
+
+What happens?
+
+---
+
+# Two factor variables
+
+You now explore the factor variables `gender` and `occupation`.
+
+Do a mosaic plot
+
+```{r out.width='45%', fig.align="center"}
+plot(gender ~ occupation, data = cps_1985)
+```
+
+
+---
+
+# A factor and a numeric variable
+
+You now explore the factor `gender` and the numeric variable `wage`.
+
+```{r echo=FALSE, include=FALSE}
+attach(cps_1985)
+```
+
+```{r}
+tapply(wage, gender, mean)
+tapply(log(wage), list(gender, occupation), mean)
+```
+
+```{r echo=FALSE}
+detach(cps_1985)
+```
+
+So, `tapply` subsets the `wage` by `gender` (or: `gender` and `occupation`) and then applies the function `mean` to each subset.
+
+---
+
+# A factor and a numeric variable
+
+You now explore a factor variable and a numeric variable.
+
+Visualize the distribution of `wage` per `gender`
+
+```{r out.width='45%', fig.align="center"}
+boxplot(log(wage) ~ gender, data = cps_1985)
+```
+---
+
+Now try with
+
+```{r out.width='65%', fig.align="center"}
+boxplot(log(wage) ~ gender + occupation, data = cps_1985)
+```
+
+---
+
+class: inverse, center, middle
+
+# Data visualisation in R
+
+---
+
+# Basic plot instructions 
+
+Your starting point is the construction of a **scatterplot**:
+
+- load the `journals.txt` data set and save as `journals` data frame
+
+- work through the following instructions
+
+```{r eval=FALSE}
+journals$cite_price <- journals$price/journals$citations
+plot(log(cite_price) ~ log(subs), data = journals)
+rug(log(journals$subs))
+rug(log(journals$cite_price), side = 2)
+```
+
+and adjust the plotting instructions
+
+```{r eval=FALSE}
+plot(log(cite_price) ~ log(subs), data = journals, pch = 19, 
+     col = "blue", xlim = c(0, 8), ylim = c(-7, 4), 
+     main = "Library subscriptions")
+rug(log(journals$subs))
+rug(log(journals$cite_price), side=2)
+```
+
+---
+
+# Basic plot instructions
+
+The `curve()` function draws a curve corresponding to a function over the interval [from, to].
+
+
+```{r out.width='45%', fig.align="center"}
+curve(dnorm, from = -5, to = 5, col = "red", lwd = 3, 
+      main = "Density of the standard normal distribution")
+```
+
+---
+
+# Plots with ggplot2
+
+The aim of the `ggplot2` package is to create elegant data visualisations using the grammar of graphics. 
+
+--
+
+Here are the basic steps:
+
+- begin a plot with the function `ggplot()` creating a coordinate system that you can add layers to
+
+- the first argument of `ggplot()` is the dataset to use in the graph
+
+--
+
+Thus
+
+```{r eval=FALSE}
+library(ggplot2)
+ggplot(data = mpg)
+ggplot(mpg)
+```
+
+creates an empty graph.
+
+---
+
+# Plots with ggplot2
+
+You complete your graph by adding one or more **layers** to `ggplot()`. 
+
+--
+
+For example: 
+
+- `geom_point()` adds a layer of points to your plot, which creates a scatterplot
+
+- `geom_smooth()` adds a smooth line
+
+- `geom_bar` a bar plot.
+
+--
+
+Each geom function in `ggplot2` takes a mapping argument: 
+
+- how variables in your dataset are mapped to visual properties
+
+- always paired with `aes()` and the $x$ and $y$ arguments of `aes()` specify which variables to map to the $x$ and $y$ axes.
+
+---
+
+# Plots with ggplot2
+
+```{r comment = '', tidy=TRUE, message=FALSE, out.width='50%', fig.align="center"}
+library(ggplot2)
+ggplot(data = mpg) +
+geom_point(mapping = aes(x = displ, y = hwy))
+```
+
+---
+
+# Plots with ggplot2
+
+```{r comment = '', tidy=TRUE, message=FALSE, out.width='60%', fig.align="center"}
+ggplot(data = mpg) +
+geom_point(aes(x = displ, y = hwy, 
+               color = class))
+```
+---
+
+# Plots with ggplot2
+
+Compare the following set of instructions:
+
+- inside of aesthetics
+
+```{r eval=FALSE}
+ggplot(mpg) + geom_point(aes(x = displ, y = hwy, color = class))
+```
+
+- inside of aesthetics, not mapped to a variable
+
+```{r eval=FALSE}
+ggplot(mpg) + geom_point(aes(x = displ, y = hwy, color = "blue"))
+```
+
+- outside of aesthetics
+
+```{r eval=FALSE}
+ggplot(mpg) + geom_point(aes(x = displ, y = hwy), color = "blue")
+```
+
+---
+
+# Plots with ggplot2 
+
+Now play with different geoms:
+
+- a scatterplot
+
+```{r eval=FALSE}
+ggplot(mpg) + geom_point(mapping = aes(x = class, y = hwy))
+```
+
+- a boxplot
+
+```{r eval=FALSE}
+ggplot(data = mpg) +
+geom_boxplot(mapping = aes(x = class, y = hwy))
+```
+
+- a histogram
+
+```{r eval=FALSE}
+ggplot(data = mpg) +
+geom_histogram(mapping = aes(x = hwy))
+```
+
+- a density
+
+```{r eval=FALSE}
+ggplot(data = mpg) +
+geom_density(mapping = aes(x = hwy))
+```
+
+---
+
+# Plots with ggplot2
+
+Now you will add multiple geoms to the same plot.
+
+Predict what the following code does:
+
+```{r eval=FALSE}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  geom_smooth(mapping = aes(x = displ, y = hwy))
+```
+
+
+---
+
+# Plots with ggplot2
+
+Mappings and data can be specified **global** (in `ggplot()`) or local.
+
+```{r message=FALSE, out.width='45%', fig.align="center"}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_point() +
+  geom_smooth() + theme_bw()       # adjust theme 
+```
+
+
+---
+
+# Plots with ggplot2
+
+Mappings and data can be specified global or **local**.
+
+```{r message=FALSE, out.width='45%', fig.align="center"}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_point(mapping = aes(color = drv)) +
+  geom_smooth() + theme_bw()
+```
+
+
+---
+
+# Plots with ggplot2
+
+Mappings and data can be specified global or **local**.
+
+```{r message=FALSE, out.width='45%', fig.align="center"}
+library(dplyr)
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_point(mapping = aes(color = drv)) +
+  geom_smooth(data = filter(mpg, drv == "f")) + theme_bw()
+```
+
+---
+
+# R challenge
+
+Use the Danish fire insurance losses. Plot the arrival of losses over time. 
+
+1. Use `type= "l"` for a line plot, label the $x$ and $y$-axis, and give the plot a title using main.
+
+2. Do the same with instructions from ggplot2. Use `geom_line()` to create the line plot.
+
+---
+
+# R challenge solved
+
+A classic plot of the Danish fire insurance losses
+
+```{r out.width='45%', fig.align="center"}
+plot(danish$Date, danish$Loss.in.DKM, type = "l", xlab = "Date", ylab = "Loss",
+     main = "Fire insurance data")
+```
+
+---
+
+# R challenge solved
+
+With `ggplot2`
+
+```{r out.width='45%', fig.align="center"}
+ggplot(danish, aes(x = Date, y = Loss.in.DKM)) +  
+	geom_line() + theme_bw() +
+  labs(title = "Fire insurance data", x = "Date", y = "Loss") 
+```
+
+---
+
+# R challenge
+
+1. Use the data set `car_price.csv` available in the documentation. Import the data in R.
+
+2. Explore the data.
+
+3. Make a scatterplot of price versus income, use basic plotting instructions and use `ggplot2`.
+
+4. Add a smooth line to each of the plots (using `lines` to add a line to an existing plot and `lowess` to do scatterplot smoothing and using `geom_smooth` in the `ggplot2` grammar).
+
+---
+
+# R challenge solved
+
+Load the data
+
+```{r}
+car_price <- read.csv("../data/car_price.csv")
+```
+
+Do a traditional plot
+
+```{r comment = '', out.width='35%', fig.align="center"}
+plot(price ~  income, data = car_price)
+lines(lowess(car_price$income, car_price$price), col = "blue")
+```
+
+---
+
+# R challenge solved
+
+
+With `ggplot`
+
+```{r comment = '', out.width='45%', fig.align="center"}
+ggplot(car_price, aes(x = income, y = price)) +
+  geom_point(shape = 1, alpha = 1/2) + 
+  geom_smooth() + theme_bw()
+```
+
+---
+
+class: inverse, center, middle
+
+# Data wrangling in R
+
+---
+
+# Three directions for data wrangling
+
+Three lines of work are available:
+
+- the basic R instructions (e.g. using `subset`, `aggregate`)
+
+- the RStudio line offering the packages from the `tidyverse`, including the `dplyr` package
+
+- the `data.table` line developed by Matt Dowle, see e.g. DataCamp’s course on `data.table`.
+
+--
+
+The latter two:
+
+- offer advanced, and fast, data handling with large R objects and lots of flexibility 
+
+- have a very specific syntax, with a demanding learning curve.
+
+<br/> 
+
+This tutorial will mainly explore the `tidyverse` direction. 
+
+---
+
+# The basic split-apply-combine strategy
+
+We first cover some basic R instructions, before diving into the `tidyverse`. 
+
+Use the `diamonds` data set (from the `ggplot2` package) and subset
+
+```{r eval=FALSE}
+subset(diamonds, cut == "Ideal")
+my_subset <- diamonds[, c("carat", "cut", "color", "clarity")]
+```
+--
+
+Calculate a new variable
+```{r eval=FALSE}
+diamonds$price_per_carat <- diamonds$price/diamonds$carat
+```
+--
+
+Calculate average `price` per each type of `cut`
+```{r eval=FALSE}
+aggregate(price ~ cut, diamonds, mean)
+```
+or
+```{r eval=FALSE}
+aggregate(price ~ cut + color, diamonds, mean)
+```
+
+---
+
+# Entering the tidyverse 
+
+The tidyverse is a collection of R packages sharing the same design philosphy.
+
+`require(tidyverse)` loads the 8 core packages:
+
+* ggplot2       
+* readr         
+* stringr
+* dplyr         
+* purrr         
+* forcats
+* tidyr         
+* tibble        
+
+`install.package(tidyverse)` installs many other packages, including:
+
+* lubridate 
+* readxl
+
+Today you will use <span style="color:#e0144e;">5-6 packages</span> from the tidyverse!
+
+---
+
+# A tibble instead of a data.frame
+
+Within the `tidyverse` tibbles are a modern take on data frames:
+
+- keep the features that have stood the test of time
+
+- drop the features that used to be convenient but are now frustrating. 
+
+You can use: 
+
+- `tibble()` to create a new tibble
+
+- `as_tibble()` transforms an object (e.g. a data frame) into a tibble.
+
+---
+
+# R challenge
+
+Transform `mtcars` into a tibble and inspect
+
+```{r eval=FALSE}
+str(mtcars)
+```
+
+
+```{r message=FALSE, out.width='45%', fig.align="center"}
+library(tibble)
+as_tibble(mtcars)
+```
+
+
+---
+
+# Pipes in R
+
+In R, the pipe operator is `%>%`. 
+
+You can think of this operator as being similar to the `+` in a ggplot2 statement. 
+
+It takes the output of one statement and makes it the input of the next statement. 
+
+When describing it, you can think of it as a “THEN”.
+
+--
+
+A first example: 
+
+- take the `diamonds` data (from the `ggplot2` package)
+
+- then subset
+
+```{r eval=FALSE}
+diamonds %>% filter(cut == "Ideal")
+```
+
+---
+
+# Data manipulation verbs
+
+The `dplyr` package holds many useful data manipulation verbs:
+
+- `mutate()` adds new variables that are functions of existing variables
+
+- `select()` picks variables based on their names
+
+- `filter()` picks cases based on their values
+
+- `summarise()` reduces multiple values down to a single summary
+
+- `arrange()` changes the ordering of the rows.
+
+These all combine naturally with `group_by()` which allows you to perform any operation “by group”.
+
+---
+
+# filter()
+
+Extract rows that meet logical criteria.
+
+--
+
+Here you go:
+
+- inspect the `diamonds` data set
+
+- filter observations with `cut` equal to `Ideal`
+
+```{r}
+filter(diamonds, cut == "Ideal")
+```
+
+---
+
+# filter()
+
+Here is an overview of logical tests
+
+<center>
+<img src="Images/basic/logical_tests.png" width="400"/>
+</center>
+
+---
+
+# mutate()
+
+Create new columns.
+
+--
+
+Here you go:
+
+- inspect the `diamonds` data set
+
+- create a new variable `price_per_carat`
+
+```{r}
+mutate(diamonds, price_per_carat = price/carat)
+```
+
+---
+
+# Multistep operations
+
+Use the `%>%` for multistep operations. 
+
+Passes result on left into first argument of function on right.
+
+Here you go:
+
+```{r}
+diamonds %>% mutate(price_per_carat = price/carat) %>% 
+  filter(price_per_carat > 1500) 
+```
+
+
+---
+
+# summarise()
+
+Compute table of summaries.
+
+Here you go: 
+
+- inspect the `diamonds` data set
+
+- calculate mean and standard deviation of `price`
+
+```{r}
+diamonds %>% summarise(mean = mean(price), std_dev = sd(price))
+```
+
+---
+
+# group_by()
+
+Groups cases by common values of one or more columns.
+
+Here you go: 
+
+- inspect the `diamonds` data set
+
+- calculate mean and standard deviation of `price` by level of `cut`
+
+```{r}
+diamonds %>% group_by(cut) %>% summarize(price = mean(price), carat = mean(carat))
+```
+
+---
+
+# R challenge
+
+1. Load the data `Parade2005.txt`.
+
+2. Determine the mean earnings in California.
+
+3. Determine the number of individuals residing in Idaho.
+
+4. Determine the mean and the median earnings of celebrities.
+
+---
+
+# R challenge solved
+
+Here you go:
+
+```{r eval=FALSE}
+parade_2005 %>% filter(state == "CA") %>% 
+              summarize(mean = mean(earnings))
+```
+
+```{r eval=FALSE}
+parade_2005 %>% filter(state == "ID") %>% summarize(number = n())
+```
+
+```{r eval=FALSE}
+parade_2005 %>% group_by(celebrity) %>% 
+  summarize(mean = mean(earnings), median = median(earnings))
+```
+
+```{r eval=FALSE}
+parade_2005 %>% group_by(celebrity) %>% 
+  ggplot(aes(x = celebrity, y = earnings)) + theme_bw() +
+  geom_boxplot(color = "blue")
+```
+
+---
+
+# R challenge solved - cont.
+
+We can solve the same challenge with **basic** R instructions. 
+
+```{r eval=FALSE}
+CA_data <- subset(parade_2005, state == "CA")
+mean(CA_data$earnings)
+```
+or do 
+```{r eval=FALSE}
+tapply(earnings, state, mean)
+aggregate(earnings ~ state, parade_2005, mean)
+```
+
+and for the number of inhabitants in Idaho
+
+```{r eval=FALSE}
+d <- aggregate(earnings ~ state , parade_2005, length)
+d[d$state == "ID", ]
+```
+
+---
+
+# Join operations
+
+A **join** operation in database terminology is a merging of two data frames.
+
+There are 4 types of joins:
+
+- **Inner join** (or join): retain just the rows each table that match the condition
+
+- **Left outer join** (or left join): retain all rows in the first table, and just the rows in the second table that match the condition
+
+- **Right outer join** (or right join): retain just the rows in the first table that match the condition, and all rows in the second table
+
+- **Full outer join** (or full join): retain all rows in both tables
+
+Column values that cannot be filled in are assigned NA values
+
+---
+
+# Join operations
+
+We create a toy data set with policyholders<sup>1</sup>:
+
+.footnote[
+[1] Courtesy of Ryan Tibshirani's course on Statistical computing.
+]
+
+```{r}
+tab_1 <- data.frame(name = c("Alexis", "Bernie", "Charlie"),
+                  children = 1:3,
+                  stringsAsFactors = FALSE)
+tab_2 <- data.frame(name = c("Alexis", "Bernie", "David"),
+                  age = c(54, 34, 63),
+                  stringsAsFactors = FALSE)
+tab_1; tab_2
+```
+
+
+---
+
+# inner_join()
+
+We join `tab1` and `tab2` by name, but keep only customers in intersection:
+
+```{r}
+inner_join(x = tab_1, y = tab_2, by = "name")
+```
+
+---
+
+# left_join()
+
+We join `tab_1` and `tab_2` by name, but keep all customers from `tab_1`:
+
+```{r}
+left_join(x = tab_1, y = tab_2, by = "name")
+```
+
+---
+
+# right_join()
+
+We join `tab_1` and `tab_2` by name, but keep all customers from `tab_2`:
+
+```{r}
+right_join(x = tab_1, y = tab_2, by = "name")
+```
+
+---
+
+# full_join()
+
+Finally, suppose we want to join `tab_1` and `tab_2` by name, and keep all customers from both:
+
+```{r}
+full_join(x = tab_1, y = tab_2, by = "name")
+```
+
+---
+
+class: inverse, center, middle
+
+# More on data structures: factors and dates
+
+---
+
+# The gapminder package
+
+> <font size="+1"> <p align="justify"> The Gapminder Foundation is a non-profit venture registered in Stockholm, that promotes sustainable global development and achievement of the United Nations Millennium Development Goals by increased use and understanding of statistics and other information about social, economic and environmental development at local, national and global levels. </p></font>
+
+The package has
+
+- data describing the evolution of a number of population characteristics (GDP, life expectancy, ...) over time
+
+- more details on [http://www.gapminder.org/data/](http://www.gapminder.org/data/)
+
+```{r}
+#install.packages("gapminder")
+require(gapminder)
+```
+
+---
+
+# R challenge
+
+Use the skills learned so far to:
+
+1. inspect the top rows of the data
+
+2. select the data for countries in Asia
+
+3. which type of variable is `country`?
+
+---
+
+# R challenge solved
+
+```{r}
+head(gapminder)
+```
+
+
+```{r}
+asia <-  filter(gapminder, continent == "Asia")
+```
+
+
+```{r}
+class(gapminder$country)
+```
+
+---
+
+# Working with factor variables
+
+Important features of a factor variable:
+
+- representation for categorical data
+
+- predefined list of outcomes (levels).
+
+- protecting data quality.
+
+
+---
+
+# factor()
+
+Assume `sex` is a categorical variable with two possible outcomes `m` and `f`.
+```{r}
+sex <- factor(c('m', 'f', 'm', 'f'),
+              levels = c('m', 'f')) 
+```
+The `factor` command creates a new factor variable. 
+
+Here:
+
+- the first input is the categorical variable
+
+- `levels` specifies the possible outcomes of the variable.
+
+---
+
+# factor()
+
+Assigning an unrecognized level to a factor variable results in a warning.
+
+```{r}
+sex[1] <- 'male'
+```
+
+This protects the quality of the data!
+
+```{r}
+sex
+```
+
+```{r, include = FALSE}
+sex <- factor(c('m', 'f', 'm', 'f'), 
+              levels = c('m', 'f'))
+```
+
+The value `NA` is assigned to the invalid observation.
+---
+
+# levels()
+
+`levels` prints the allowed outcomes of a factor variable.
+
+```{r}
+levels(sex)
+```
+
+---
+
+# levels()
+
+Assigning a vector to `levels()` renames the allowed outcomes. 
+
+```{r}
+levels(sex) <- c('male', 'female')
+sex
+```
+ 
+---
+
+# R challenge
+
+The variable `country` in the `gapminder` data set is a factor variable.
+
+1. What are the possible levels for `country` in the subset `asia`.
+
+2. Is this the result you expected?
+
+---
+
+# R challenge solved
+
+```{r, R.options=list(max.print=20)}
+levels(asia$country)
+```
+
+<br>
+
+`asia$country` allows the same outcomes as `gapminder$country`. 
+
+This includes many countries outside of Asia!
+
+---
+
+# droplevels()
+
+`droplevels` removes all outcomes which do not appear in the factor variable.
+
+Applied to the subset `asia`:
+
+```{r}
+asia$country <- droplevels(asia$country)
+levels(asia$country)
+```
+
+---
+
+# Add level
+
+Add `x` as a new outcome for the variable `sex`. 
+
+```{r}
+levels(sex) <- c(levels(sex), 'x')
+```
+
+---
+
+# cut()
+
+`cut()` bins a numeric variable into a factor variable. 
+
+We bin the number of inhabitans in a country (`gapminder$pop`).
+
+`breaks` specifies the cutoff values.
+
+```{r, eval = FALSE}
+cut(gapminder$pop,
+    breaks = c(0, 10^7, 5*10^7, 10^8, Inf)) 
+```
+
+
+---
+
+# R challenge
+
+For the `gapminder` data set, you will now bin the life expectancy in 2007 into a factor variable.
+
+1. Select the observations for year 2007.
+
+2. Bin the life expectancy in four bins of roughly equal size (hint: `quantile`).
+
+3. How many observations are there in each bin?
+---
+
+# R challenge solved
+
+
+```{r}
+gapminder2007 <- filter(gapminder, year == 2007)
+breaks <- c(0, quantile(gapminder2007$lifeExp, c(0.25, 0.5, 0.75)), Inf)
+breaks                   
+gapminder2007 <- gapminder2007 %>% 
+  mutate(life_expectancy_binned = cut(gapminder2007$lifeExp, breaks))
+
+gapminder2007 %>%
+  group_by(life_expectancy_binned) %>%
+  summarise(frequency = n())
+```
+
+---
+
+# Visualize a factor variable with geom_bar()
+
+`geom_bar` takes a factor variable and creates a bar plot.
+
+```{r, fig.height = 3, fig.align='center'}
+ggplot(gapminder2007) + 
+  geom_bar(aes(life_expectancy_binned))
+```
+
+
+---
+
+# Visualize a factor variable with geom_bar()
+
+`geom_bar` takes a factor variable and creates a bar plot.
+
+`fill = continent` selects a different fill color for each continent. 
+
+```{r, fig.height = 3, fig.align='center'}
+ggplot(gapminder2007) + 
+  geom_bar(aes(life_expectancy_binned, 
+               fill = continent))
+```
+
+---
+
+# Visualize a factor variable with geom_bar()
+
+`geom_bar` takes a factor variable and creates a bar plot.
+
+`position = position_dodge()` shows the bars side-by-side instead of stacked.
+
+```{r, fig.height = 3, fig.align='center'}
+ggplot(gapminder2007) + 
+  geom_bar(aes(life_expectancy_binned, 
+               fill = continent),
+           position = position_dodge())
+```
+
+---
+
+# Visualize a factor variable with geom_bar()
+
+`geom_bar` takes a factor variable and creates a bar plot.
+
+`y = ..prop..` and `group = continent` plot the proportion within each group instead of the absolute count.
+
+```{r, fig.height = 3, fig.align='center'}
+ggplot(gapminder2007) + 
+  geom_bar(aes(life_expectancy_binned,
+               fill = continent, 
+               y = ..prop.., group = continent), 
+           position = position_dodge()) 
+```
+
+---
+
+# Efficient handling of dates
+
+You will learn to:
+
+- store dates in the `Date` format in R
+
+- convert text and numerical variables into a `Date` object
+
+- perform basic calculations with dates
+
+- start with base R and continue with `lubridate`.
+
+---
+
+# as.Date()
+
+`as.Date` converts text into an R `Date` object. 
+
+First input is a vector of dates in text format.
+
+```{r, eval = FALSE}
+as.Date('2019-06-17', 
+        format = '%Y-%m-%d') 
+```
+
+---
+
+# as.Date()
+
+The `format` describes the structure of the input. <br>
+* `%Y`: year, 4 digit notation
+* `%m`: month number
+* `%d`: day of the month.
+
+```{r, eval = FALSE}
+as.Date('2019-06-17', 
+        format = '%Y-%m-%d') 
+```
+
+For a full list of formating options, see
+```{r, eval = FALSE}
+?strptime
+```
+
+---
+
+# as.Date()
+
+Dates are often stored as integers.
+
+Convert integers to dates by speciying the origin (Day 0). 
+
+For example: SAS stores dates at the number of days elapsed since 1 Jan 1960. 
+
+```{r, eval = FALSE}
+as.Date(21717, origin = '1960-01-01')
+```
+
+---
+
+# R challenge
+
+Work with the `policy_data` data set.
+
+Convert the start date (`debut_pol`) and end date (`fin_pol`) into R `Date` objects.
+
+---
+
+# R challenge solved
+
+```{r}
+policy_data$start <- as.Date(policy_data$debut_pol, '%d/%m/%Y')
+policy_data$end <- as.Date(policy_data$fin_pol, '%d/%m/%Y')
+```
+
+```{r}
+head(policy_data %>% select(c('debut_pol', 'start')))
+```
+
+```{r}
+class(policy_data$start)
+```
+
+---
+
+# format()
+
+`format` converts a date into text <br>
+* `%A`: full weekday name <br>
+* `%B`: full month name
+
+```{r}
+today <- as.Date('2019-06-17', 
+                format = '%Y-%m-%d') 
+format(today, '%A %d %B %Y')
+```
+
+---
+
+# Adding and subtracting dates
+
+Calculate the duration of a contract. 
+
+Subtracting dates calculates the number of days elapsed between these dates:
+
+```{r, eval = FALSE}
+policy_duration = 
+  policy_data$end - policy_data$start
+```
+
+You can add and subtract integers from dates.
+
+```{r}
+tomorrow = today + 1
+print(tomorrow)
+```
+
+---
+
+# The lubridate package
+
+For more advanced `Date` manipulations use the `lubridate` package.
+
+```{r, message=FALSE, warning=FALSE}
+# install.packages("lubridate")
+require(lubridate)
+```
+
+
+```{r, echo = FALSE, out.width = "20%", fig.align='center'}
+knitr::include_graphics("Images/title/lubridate.png") 
+```
+
+---
+
+# Access date components
+
+`year()` selects the calendar year component from the date:
+
+```{r}
+year(today)
+```
+
+Other components are: `month()`, `day()`, `quarter()`, ...
+
+---
+
+# Advanced date math
+
+```{r}
+today + months(3)
+```
+`+ months(3)` adds three months to the Date object.
+
+Other periods are: `years()` and `days()`.
+
+
+---
+
+# Advanced date math
+
+`floor_date` rounds down to the nearest unit. 
+
+Convert daily into monhtly data:
+
+```{r}
+floor_date(today, unit = "month")
+```
+
+---
+
+# seq()
+
+Generate a sequence of dates, useful in loops:
+
+```{r}
+seq(from = as.Date('2019-01-01'), 
+    to = as.Date('2019-12-31'), 
+    by = '1 month')
+```
+
+
+---
+
+# R challenge
+
+
+Visualize the exposure contribution by start month of the contract in the `policy_data` data set.
+
+1. Add a covariate `start_month` to the data set.
+
+2. Group the data by `start_month`.
+
+3. Calculate the exposure within each group.
+
+4. Plot the data.
+
+
+---
+
+# R challenge solved
+
+```{r, fig.height = 4, fig.align='center'}
+exposure_by_month <- policy_data %>%
+  mutate(start_month = floor_date(policy_data$start, unit = 'month')) %>%
+  group_by(start_month) %>% 
+  summarize(exposure = sum(exposition))
+  
+ggplot(exposure_by_month) +
+  geom_point(aes(start_month, exposure))
+```
+
+---
+
+class: inverse, center, middle
+
+# Conditionals and control flow
+
+---
+
+# Conditionals and control flow
+
+You’ll first learn about relational operators to see how R objects compare.
+
+Make sure not to mix up `==` and `=`, where the latter is used for assignment and the former checks equality.
+
+```{r eval=FALSE}
+3 == (2 + 1)
+"intermediate" != "r"
+(1 + 2) > 4
+katrien <- c(19, 22, 4, 5, 7)
+katrien > 5
+```
+
+
+---
+
+# Logical operators
+
+Now you'll learn about logical operators to combine logicals
+
+```{r eval=FALSE}
+TRUE & TRUE
+FALSE | TRUE
+5 <= 5 & 2 < 3
+3 < 4 | 7 < 6
+```
+
+applied to vectors
+
+```{r}
+katrien <- c(19, 22, 4, 5, 7)
+jan <- c(34, 55, 76, 25, 4)
+katrien > 5 & jan <= 30
+```
+
+The `!` operator reverses the result of a logical value.
+
+```{r}
+!TRUE
+```
+
+
+---
+
+# Conditionals 
+
+Time to check the `if` statement in R.
+
+```{r comment = ''}
+num_attendees <- 30
+if (num_attendees > 5) {
+  print("You're popular!")
+}
+```
+
+and the `if else`
+
+```{r comment = ''}
+num_attendees <- 5
+if (num_attendees > 5) {
+  print("You're popular!")
+}else{
+  print("You are not so popular!")
+}
+```
+
+---
+
+# Conditionals
+
+We can use `elseif()` arbitrarily many times following an `if()` statement
+
+```{r}
+x <- -2
+
+if (x^2 < 1) {
+  x^2 
+} else if (x >= 1) {
+  2*x-1
+} else {
+ -2*x-1
+}
+```
+
+For quick decision making use `ifelse()`
+
+```{r}
+ifelse(x > 0, x, -x)
+```
+
+---
+
+# Conditionals
+
+Instead of an `if()` statement followed by `elseif()` statements (and perhaps a final else), we can use `switch()`. 
+
+We pass a variable to select on, then a value for each option
+
+```{r}
+type_of_summary <- "mode"
+
+switch(type_of_summary,
+       mean = mean(x.vec),
+       median = median(x.vec),
+       histogram = hist(x.vec),
+       "I don't understand")
+```
+
+---
+
+# Loops
+
+You'll start with a `while` loop.
+
+```{r comment = ''}
+todo <- 64
+
+while (todo > 30) {
+  print("Work harder")
+  todo <- todo - 7
+}
+```
+
+
+---
+
+# Loops in R
+
+Now the `for` loop in R.
+
+```{r comment = '', eval=FALSE}
+primes <- c(2, 3, 5, 7, 11, 13)
+
+# loop version 1
+for (p in primes) {
+  print(p)
+}
+# loop version 2
+for (i in 1:length(primes)) {
+  print(primes[i])
+}
+```
+
+
+---
+
+class: inverse, center, middle
+
+# Writing functions
+
+---
+
+# Write your own function
+
+Creating a function in R is basically the assignment of a function object to a variable. 
+
+```{r comment = ''}
+My_sqrt <- function(x) {
+  sqrt(x)
+}
+
+# use the function
+My_sqrt(12)
+```
+
+With no explicit `return()` statement, the default is just to return whatever is on the last line. 
+
+---
+
+# Write your own function
+
+You can define default argument values in your own R functions. 
+
+Here you see an example:
+
+```{r comment = ''}
+My_sqrt <- function(x, print_info = TRUE) {
+  y <- sqrt(x)
+  if (print_info) {
+    print(paste("sqrt", x, "equals", y))
+  }
+  return(y)
+}
+
+# some calls of the function
+My_sqrt(16)
+My_sqrt(16, FALSE)
+My_sqrt(16, TRUE)
+```
+
+---
+
+# Vectorized thinking
+
+R works in a vectorized way. 
+
+Check this by calling the function `My_sqrt` on an input vector.
+
+---
+
+# What the function can see and do
+
+Some things to keep in mind:
+
+- each function has its own environment
+
+- names here override names in the global environment
+
+- internal environment starts with the named arguments
+
+- assignments inside the function only change the internal environment
+
+- names undefined in the function are looked for in the global environment.
+
+---
+
+# R challenge
+
+1. Create a function that will return the sum of 2 integers
+
+2. Create a function that given a vector and an integer will return how many times the integer appears inside the vector.
+
+3. Create a function that given a vector will print by default the mean and the standard deviation, it will optionally also print the median. Use an instruction like the one printed below for the print messages.
+
+4. Adjust the function created in 3. so that it returns a list with the mean, median and standard deviation.
+
+```{r eval=FALSE}
+  cat("Mean is:", mean, ", SD is:", stdv, "\n")
+```
+
+---
+
+# R challenge solved
+
+```{r comment = ''}
+My_sum <- function (x, y) {
+  r <- x + y
+  r
+}
+
+My_sum(5, 10)
+```
+
+---
+
+# R challenge solved
+
+```{r comment = ''}
+My_count <- function (v, x) {
+  count <- 0
+  for (i in 1:length(v)) {
+    if (v[i] == x) {
+      count <- count + 1
+    }
+  }
+  count
+}
+
+My_count(c(1:9, rep(10, 100)), 10)
+```
+
+---
+
+# R challenge solved
+
+```{r comment = ''}
+My_mean_SD <- function(x, med = FALSE) {
+  mean <- round(mean(x), 1)
+  stdv <- round(sd(x), 1)
+  cat("Mean is:", mean, ", SD is:", stdv, "\n")
+  
+  if(med){
+    median <- median(x)
+    cat("Median is:", median , "\n")
+  }
+}
+
+My_mean_SD(1:10, med=TRUE)
+```
+
+---
+
+# R challenge solved
+
+```{r comment = ''}
+My_mean_SD <- function(x, med = FALSE) {
+  mean <- round(mean(x), 1)
+  stdv <- round(sd(x), 1)
+  if(!med){
+  return(list(mean = mean, stdev = stdv))
+  }
+  else{
+    median <- median(x)
+    return(list(mean = mean, stdev = stdv, median = median))
+  }
+}
+
+My_mean_SD(1:10, med = TRUE)
+```
+
+---
+
+class: center, middle
+
+# Working with probability distributions
+
+---
+
+# Probability distributions
+
+R has 4 crucial functions for many standard distributions
+
+* density: e.g. `dexp`, `dgamma`, `dlnorm`
+
+* quantile: e.g. `qexp`, `qgamma`, `qlnorm`
+
+* cdf: e.g. `pexp`, `pgamma`, `plnorm`
+
+* simulation: e.g. `rexp`, `rgamma`, `rlnorm`
+
+The **parameters** of the distribution are then specified in the arguments of these functions.
+
+---
+
+# Discrete distributions
+
+You generate `n_sim` observations from a $\text{BIN}(n,p)$ distribution:
+
+```{r}
+n_sim <- 10000  # number of generated draws
+p <- 0.3      # prob of success
+n <- 6        # number of experiments in BIN
+```
+
+```{r}
+data_binom <- rbinom(n_sim, n, p)
+```
+
+Calculate empirical mean and variance
+```{r}
+mean(data_binom) # empirical mean
+var(data_binom)  # empirical variance
+```
+
+Now compare empirical mean/variance with their theoretical counterparts. 
+
+---
+
+# Discrete distributions
+
+Now you want to visualize the empirical cdf and pf. 
+
+```{r fig.height = 4, fig.align='center'}
+x <- sort(unique(data_binom))
+emp_prob <- data_binom %>% table() %>% as.data.frame() %>% mutate(label = "emp", prob = Freq/n_sim)
+theo_prob <- data_binom %>% table() %>% as.data.frame() %>% mutate(label = "theo", prob = dbinom(x, n, p))
+df <- bind_rows(theo_prob, emp_prob) # or use 'rbind'
+df$label <- as.factor(df$label)
+ggplot(df, aes(., prob)) + theme_bw() + geom_col(aes(fill = label), position = position_dodge())
+```
+
+
+
+---
+
+# Continuous distributions
+
+Working with the normal distribution
+
+```{r}
+# evaluate cdf of N(0,1) in 0
+pnorm(0, mean = 0, sd = 1)
+pnorm(0, 0, 1) # shorter
+# 95% quantile of N(0,1) 
+qnorm(0.95, mean = 0, sd = 1)
+# a set of quantiles
+qnorm(c(0.025, 0.05, 0.5, 0.95, 0.975), 0, 1)
+```
+
+---
+
+# Continuous distributions
+
+Working with the normal distribution
+
+```{r fig.height = 4, fig.align='center'}
+x <- rnorm(10000, mean = 10, sd = 1)
+hist(x, probability = TRUE, nclass = 55, col = "pink", main = " ")
+curve(dnorm(x, mean = 10, sd = 1), xlim = range(x), col = "black", add = TRUE)
+```
+
+---
+
+# R challenge
+
+```{r fig.height = 4, fig.align='center'}
+x <- rnorm(100, mean = 10, sd = 1)
+df <- data.frame(x = x)
+ggplot(df, aes(x)) + stat_ecdf(geom = "step") + theme_bw() + ylab("") +
+  stat_function(fun = pnorm, args = list(mean = 10, sd = 1), col = "blue")
+```
+
+
+---
+
+class: inverse, center, middle
+
+# Fitting models to data
+
+---
+
+# Analyzing credit card applicants' data
+
+Your journey as a model builder in `R` will start from studying linear models and the use of the `lm` function.
+
+Hereto:
+
+* you analyze Ford dealership data as registered in Milwaukee, September/October 1990
+
+* data on 62 credit card applicants are available, including the car purchase price $Y$ and the applicant's annual income $x$
+
+* data are in the `.csv` file `car_price`.
+
+---
+
+# Explore the data
+
+You inspect the data with a scatterplot of `income` versus `price`:
+
+```{r fig.height = 4, fig.align='center'}
+ggplot(car_price, aes(x = income/1000, y = price)) +
+  theme_bw() +
+  geom_point(shape = 1, alpha = 1/2) + 
+  geom_smooth() 
+```
+
+---
+
+# A simple linear regression fit
+
+You will now fit a simple regression model with `income` as predictor to purchase `price`. That is:
+
+\begin{eqnarray*}
+Y_i &=& \beta_0+\beta_1 \cdot x_i +\epsilon_i,
+\end{eqnarray*}
+
+where $Y_i$ is the car `price` for observation $i$, $x_i$ the corresponding `income` and $\epsilon_i$ an error term. 
+
+$\beta_0$ is the intercept and $\beta_1$ the slope.
+
+
+---
+
+# lm()
+
+You assign the output of the `lm` function to the object `lm_car`
+
+```{r comment=''}
+lm_car <- lm(price ~ income, data = car_price)
+```
+
+Now you inspect the results: 
+
+```{r eval=FALSE}
+class(lm_car) # object class
+summary(lm_car) # get a summary
+# check attributes of object 'lm_car'
+names(lm_car)
+# some useful stuff: 'coefficients', 'residuals', 'fitted.values', 'model'
+lm_car$coef
+lm_car$residuals
+lm_car$fitted.values
+```
+
+---
+
+# Utility functions
+
+Linear models in R come with a bunch of utility functions:
+
+* `coef()` for retrieving coefficients 
+
+* `fitted()` for fitted values
+
+* `residuals()` for residuals
+
+* `summary()`, `plot()`, `predict()` and so on.
+
+Once you master the utility functions, you’ll be able to retrieve coefficients, fitted values, make predictions, etc., in the same way for model objects returned by `glm()`, `gam()`, and many others.
+
+---
+
+# Visualize the `lm()` fit
+
+To visualize this linear model fit you can use the built-in `plot` function, applied to object `lm_car`
+
+```{r eval=FALSE}
+plot(lm_car)
+```
+
+---
+
+# Visualize the `lm()` fit
+
+Or you can create your own plot
+
+```{r fig.height = 3, fig.align='center'}
+ggplot(car_price, aes(x = income, y = price)) + 
+  theme_bw() +
+  geom_point(shape = 1, alpha = 1/2) + 
+  geom_smooth() +
+  geom_abline(intercept = lm_car$coef[1], slope = lm_car$coef[2], colour = "red") 
+```
+
+---
+
+# predict()
+
+Making predictions for new applicants:
+
+```{r}
+new <- data.frame(income = 60000) # set up a new data frame
+new_pred <- predict(lm_car, newdata = new) # call predict with new df
+new_pred
+```
+
+---
+
+# R challenge
+
+1. Load the `pollution.csv` data set.
+
+2. Read the data description [here](https://katrienantonio.github.io/intro-R-book/lms.html#a-multiple-linear-regression-model).
+
+3. Create data frames of related covariates and visualize. Use code printed below.
+
+4. Build a linear regression model to explain `mort` as a function of `so2` and `educ`. Inspect the model and fit.
+
+```{r eval=FALSE}
+mort_poll_1 <- data.frame(mort, prec, jant, jult, humid)
+mort_poll_2 <- data.frame(mort, ovr65, popn, educ, hous, dens, nonw, wwdrk, poor)
+mort_poll_3 <- data.frame(mort, hc, nox, so2)
+
+pairs(mort_poll_1, cex=1, pch=19)
+```
+---
+
+class: center, middle
+
+# Thanks!
+
+Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).
+
+```{r, eval=FALSE, include=FALSE}
+# this code can be used to extract the R code from an R Markdown (Rmd) document
+library(knitr)
+path <- "C:/Users/u0043788/Dropbox/PE Programming in R for Data Science/day 1"
+setwd(path)
+file.exists("day_1_R_programming.Rmd")
+purl("day_1_R_programming.Rmd")
+```
